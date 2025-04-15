@@ -18,7 +18,7 @@ def json_to_xml(json_list, theme_name):
     xml_output = "<resources>\n"
     for index, item in enumerate(json_list, start=1):
         # Escape apostrophes
-        escaped_item = item.replace("'", "&apos;")
+        escaped_item = item.replace("'", "\\'")
         xml_output += f'    <string name="{theme_name}_text{index}">{escaped_item}</string>\n'
     xml_output += "</resources>"
     return xml_output
