@@ -10,13 +10,16 @@ def clear_output_folder(output_folder):
         shutil.rmtree(output_folder)
     os.makedirs(output_folder)
 
-def json_to_xml(json_list):
+def json_to_xml(json_list, theme_name):
     """
     Converts a list of strings to an XML string where each item is wrapped in a <string> tag.
+    Escapes special characters like apostrophes and includes the adventure name in the XML row.
     """
     xml_output = "<resources>\n"
     for index, item in enumerate(json_list, start=1):
-        xml_output += f'    <string name="text{index}">{item}</string>\n'
+        # Escape apostrophes
+        escaped_item = item.replace("'", "&apos;")
+        xml_output += f'    <string name="{theme_name}_text{index}">{escaped_item}</string>\n'
     xml_output += "</resources>"
     return xml_output
 
@@ -43,6 +46,9 @@ def main():
                 output_filename = base_name + ".xml"
                 output_path = os.path.join(output_dir, output_filename)
                 
+                # Extract the adventure name from the filename (e.g., "strings_adventure").
+                theme_name = base_name.split("_")[-1]
+                
                 # Read JSON data from the file.
                 try:
                     with open(input_path, "r", encoding="utf-8") as json_file:
@@ -57,7 +63,7 @@ def main():
                     continue
                 
                 # Convert the JSON array to XML.
-                xml_result = json_to_xml(data)
+                xml_result = json_to_xml(data, theme_name)
                 
                 # Write the XML output to the corresponding file in the output directory.
                 with open(output_path, "w", encoding="utf-8") as xml_file:
